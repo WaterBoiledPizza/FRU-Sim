@@ -461,16 +461,11 @@ func long_lock_cd():
 # Move to pre-kb position
 func move_pre_kb():
 	var flank_positions := get_oracle_flank_pos()
-	# Check Supp Anchor (H2) distance
-	var dist_check_0 = v2(get_char("h2").global_position).distance_to(flank_positions[0])
-	var dist_check_1 = v2(get_char("h2").global_position).distance_to(flank_positions[1])
-	var supp_pos = 0 if dist_check_0 < dist_check_1 else 1
-	
 	for key: String in party_keys_sa:
 		if key.contains("sup"):
-			get_char_sa(key).move_to(flank_positions[supp_pos])
+			get_char_sa(key).move_to(flank_positions[0])
 		else:
-			get_char_sa(key).move_to(flank_positions[1 - supp_pos])
+			get_char_sa(key).move_to(flank_positions[1])
 
 
 ## 47.1

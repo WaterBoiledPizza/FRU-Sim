@@ -6,7 +6,7 @@
 extends Node
 
 enum Intercards {NW, NE, SE, SW}
-enum Strat {NA, MUR}
+enum Strat {NA, MUR, MANA}
 
 # Debuff Icon Scenes
 const AERO_ICON = preload("res://scenes/ui/auras/debuff_icons/p4/aero.tscn")
@@ -70,6 +70,7 @@ const AKH_MORN_DARK_COLOR := Color.DARK_VIOLET
 
 const NA_WE_PRIO := ["h2", "h1", "t2", "t1", "m1", "m2", "r1", "r2"]
 const MUR_WE_PRIO := ["h1", "r1", "m1", "t1", "t2", "m2", "r2", "h2"]
+const MANA_WE_PRIO := ["h1", "t1", "t2", "m1", "m2", "r1", "r2", "h2"]
 const DEBUFF_ASSIGNMENTS := {
 	"r_aero_sw": {AERO_ICON: 14, WYRMCLAW_ICON: 40, RETURN_ICON: 33},
 	"r_aero_se": {AERO_ICON: 14, WYRMCLAW_ICON: 40, RETURN_ICON: 33},
@@ -512,7 +513,11 @@ func move_post_exa_4():
 ## 35.8
 # Move to Rewind posistions.
 func move_rewind():
-	move_party(party, CTPos.REWIND_REF[exaline_spawns])
+	if strat == Strat.MANA:
+		var exa = 0 if north_exa else 1
+		move_party(party, CTPos.MANA_REWIND_REF[exa])
+	else:
+		move_party(party, CTPos.REWIND_REF[exaline_spawns])
 
 
 ## 39.6
@@ -553,13 +558,16 @@ func clone_cast_spirit():
 ## 40.6
 # Move to post-rewind spread.
 func move_jump_spread():
-	if exaline_spawns == Intercards.NW:
-		for key: String in CTPos.JUMP_SPREAD_NW:
-			party[key].move_to(CTPos.JUMP_SPREAD_NW[key])
+	if strat == Strat.MANA:
+		var MANA_JUMP_SPREAD_POS = CTPos.MANA_JUMP_SPREAD_N if north_exa else CTPos.MANA_JUMP_SPREAD_S
+		move_party(party, MANA_JUMP_SPREAD_POS)
 	else:
-		for key: String in CTPos.JUMP_SPREAD_NE:
-			party[key].move_to(CTPos.JUMP_SPREAD_NE[key].rotated(arena_rotation[exaline_spawns]))
-
+		if exaline_spawns == Intercards.NW:
+			for key: String in CTPos.JUMP_SPREAD_NW:
+				party[key].move_to(CTPos.JUMP_SPREAD_NW[key])
+		else:
+			for key: String in CTPos.JUMP_SPREAD_NE:
+				party[key].move_to(CTPos.JUMP_SPREAD_NE[key].rotated(arena_rotation[exaline_spawns]))
 
 ## 41.0
 # Hide Usurper
@@ -632,6 +640,17 @@ func jump_hit():
 	var pc: PlayableCharacter = party[jump_target]
 	ground_aoe_controller.spawn_circle(v2(pc.global_position), JUMP_RADIUS,
 		JUMP_LIFETIME, JUMP_COLOR, [1, 1, "Spirit Taker (Oracle Jump)", [pc]])
+
+## 44.0
+# Party use anti-kb (ONLY FOR MANA)
+func party_arms_length():
+	if strat == Strat.MANA:
+		for key: String in party:
+			var pc: PlayableCharacter = party[key]
+			if pc.is_player() and !Global.spectate_mode:
+				continue
+			else:
+				pc.arms_length()
 
 
 ## 46.6
@@ -823,7 +842,7 @@ func instantiate_party(new_party: Dictionary) -> void:
 		jump_target = get_tree().get_first_node_in_group("player").get_role()
 	else:
 		jump_target = NA_WE_PRIO.pick_random()
-	# Randomize Exaline spawns
+	# Randomize Exaline spawns 
 	exaline_spawns = randi_range(0, 3) as Intercards
 	east_exa = (exaline_spawns == Intercards.NE or exaline_spawns == Intercards.SE)
 	north_exa = (exaline_spawns == Intercards.NE or exaline_spawns == Intercards.NW)
@@ -835,6 +854,8 @@ func na_mur_party_setup() -> void:
 		we_prio = NA_WE_PRIO
 	elif strat == Strat.MUR:
 		we_prio = MUR_WE_PRIO
+	elif strat == Strat.MANA:
+		we_prio = MANA_WE_PRIO
 	
 	# Shuffle dps/sup roles
 	var shuffle_list := party.keys()

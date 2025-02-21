@@ -13,6 +13,8 @@ class_name PlayableCharacter
 @export var model_scale := 1.25
 @export var model_scene : PackedScene
 
+@export var arms_length_duration := 6.0
+
 @onready var party_list : PartyList = get_tree().get_first_node_in_group("party_list")
 
 var model: Node3D
@@ -240,3 +242,12 @@ func on_spectate_mode_changed() -> void:
 
 #func get_name() -> StringName:
 	#return Global.ROLE_NAMES[role_key]
+
+
+func arms_length() -> void:
+	kb_resist = true
+	var timer: Timer = Timer.new()
+	timer.wait_time = arms_length_duration
+	add_child(timer)
+	timer.timeout.connect(func() -> void: kb_resist = false)
+	timer.start()

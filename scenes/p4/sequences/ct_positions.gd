@@ -328,6 +328,34 @@ const JUMP_SPREAD_NW := {
 	"h1": H1_SPREAD_NW, "h2": H2_SPREAD_NW
 }
 
+# Mana Rewind Positions, Relative spread pos
+const MANA_REWIND_REF := [MANA_REWIND_N, MANA_REWIND_S]
+const MANA_REWIND_N := {
+	"t1": NW * 5, "t2": NE * 5,
+	"r1": MID + RS1, "r2": MID + RS2, 
+	"h1": MID + RS1 + RS2, "h2": MID + RS1 - RS2, 
+	"m1": MID - RS1 + RS2, "m2": MID - RS1 - RS2,
+}
+const MANA_REWIND_S := {
+	"m2": MID + RS1, "m1": MID + RS2, 
+	"h2": MID + RS1 + RS2, "h1": MID + RS1 - RS2, 
+	"r2": MID - RS1 + RS2, "r1": MID - RS1 - RS2,
+	"t2": SW * 5, "t1": SE * 5,
+}
+
+const MANA_JUMP_SPREAD_N := { 
+	"t1": NW * 30, "t2": NE * 30,
+	"r1": NW * 17, "r2": NE * 17, 
+	"h1": W * 24, "h2": E * 24, 
+	"m1": SW * 17, "m2": SE * 17,
+}
+const MANA_JUMP_SPREAD_S := {
+	"m2": NW * 17, "m1": NE * 17, 
+	"h2": W * 24, "h1": E * 24, 
+	"r2": SW * 17, "r1": SE * 17,
+	"t2": SW * 30, "t1": SE * 30,
+}
+
 const AKH_MORN := {
 	"t1": AM_STACK_LEFT, "t2": AM_STACK_RIGHT,
 	"m1": AM_STACK_LEFT + RS1, "m2": AM_STACK_RIGHT + RS1, 

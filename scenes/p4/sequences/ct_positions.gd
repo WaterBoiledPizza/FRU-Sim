@@ -331,16 +331,16 @@ const JUMP_SPREAD_NW := {
 # Mana Rewind Positions, Relative spread pos
 const MANA_REWIND_REF := [MANA_REWIND_N, MANA_REWIND_S]
 const MANA_REWIND_N := {
-	"t1": NW * 5, "t2": NE * 5,
-	"r1": MID + RS1, "r2": MID + RS2, 
-	"h1": MID + RS1 + RS2, "h2": MID + RS1 - RS2, 
-	"m1": MID - RS1 + RS2, "m2": MID - RS1 - RS2,
+	"t1": NW * 5 + N * 3, "t2": NE * 5 + N * 3,
+	"r1": MID + RS1 + N * 3, "r2": MID + RS2 + N * 3, 
+	"h1": MID + RS1 + RS2 + N * 3, "h2": MID + RS1 - RS2 + N * 3, 
+	"m1": MID - RS1 + RS2 + N * 3, "m2": MID - RS1 - RS2 + N * 3,
 }
 const MANA_REWIND_S := {
-	"m2": MID + RS1, "m1": MID + RS2, 
-	"h2": MID + RS1 + RS2, "h1": MID + RS1 - RS2, 
-	"r2": MID - RS1 + RS2, "r1": MID - RS1 - RS2,
-	"t2": SW * 5, "t1": SE * 5,
+	"m2": MID + RS1 + S * 3, "m1": MID + RS2 + S * 3, 
+	"h2": MID + RS1 + RS2 + S * 3, "h1": MID + RS1 - RS2 + S * 3, 
+	"r2": MID - RS1 + RS2 + S * 3, "r1": MID - RS1 - RS2 + S * 3,
+	"t2": SW * 5 + S * 3, "t1": SE * 5 + S * 3,
 }
 
 const MANA_JUMP_SPREAD_N := { 
